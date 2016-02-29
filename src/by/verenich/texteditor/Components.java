@@ -3,10 +3,16 @@
  */
 package by.verenich.texteditor;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 public class Components{
     public static void main(String []args){
-        TextFrame window = new TextFrame();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new TextFrame();
+            }
+        });
     }
 }
 
