@@ -13,6 +13,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class TextFrame {
     private JFrame textFrame;
@@ -195,6 +200,7 @@ public class TextFrame {
 
         textCopy.setToolTipText("Копировать");
 
+
         instruments.add(textCopy);
     }
 
@@ -228,15 +234,58 @@ public class TextFrame {
     public void createTextField() {
         JPanel text = new JPanel();
         text.setSize(700, 420);
-        text.setLayout(new FlowLayout(FlowLayout.LEFT)); //arrangement
+        text.setLayout(new FlowLayout(FlowLayout.LEFT)); //arrangemen
         textFrame.add(text);
         text.setBackground(Color.WHITE);
+        text.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                text.requestFocusInWindow();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        text.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
     }
 //      paintComponent()
 //      переопределение и перегрузка
 //      коллекции (ИНТЕРФЕЙСЫ List, Set)
 //      анонимные классы
-
-    }
+//      alt+insert
+}
 
 
