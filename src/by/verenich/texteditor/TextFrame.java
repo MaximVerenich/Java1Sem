@@ -1,5 +1,10 @@
 package by.verenich.texteditor;
 
+import by.verenich.texteditor.controller.KeyListenerForTextField;
+import by.verenich.texteditor.controller.MouseFocusForTextField;
+import by.verenich.texteditor.storage.LettersContainer;
+import com.sun.deploy.association.Action;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,14 +18,22 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.ImageObserver;
+import java.text.AttributedCharacterIterator;
 
 public class TextFrame {
-    private JFrame textFrame;
+    public JFrame textFrame;
     private JMenuBar menu;
     private JToolBar instruments;
 
@@ -28,7 +41,8 @@ public class TextFrame {
         createMainJFrame();
         createMenu();
         createToolBar();
-        createTextField();
+        TextField textField = new TextField();
+        textFrame.add(textField);
         textFrame.setVisible(true);
     }
 
@@ -231,61 +245,14 @@ public class TextFrame {
         instruments.add(textOpen);
     }
 
-    public void createTextField() {
-        JPanel text = new JPanel();
-        text.setSize(700, 420);
-        text.setLayout(new FlowLayout(FlowLayout.LEFT)); //arrangemen
-        textFrame.add(text);
-        text.setBackground(Color.WHITE);
-        text.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                text.requestFocusInWindow();
-            }
 
-            @Override
-            public void mousePressed(MouseEvent e) {
 
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-
-        text.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
-        });
-    }
 //      paintComponent()
 //      переопределение и перегрузка
 //      коллекции (ИНТЕРФЕЙСЫ List, Set)
 //      анонимные классы
 //      alt+insert
 }
+
 
 
