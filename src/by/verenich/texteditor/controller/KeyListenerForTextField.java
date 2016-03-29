@@ -1,52 +1,64 @@
 package by.verenich.texteditor.controller;
 
-import by.verenich.texteditor.LetterView;
-import by.verenich.texteditor.storage.LettersContainer;
+import by.verenich.texteditor.CreateLetter;
+import by.verenich.texteditor.Letter;
+import by.verenich.texteditor.LettersContainer;
+import by.verenich.texteditor.TextField;
 
 import javax.swing.JPanel;
-import javax.swing.text.StyledEditorKit;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
+import java.awt.event.KeyListener;
 
-/**
- * Created by 1o on 08.03.2016.
- */
-public class KeyListenerForTextField extends KeyAdapter {
-
+public class KeyListenerForTextField implements KeyListener {
+    private TextField textField;
     private LettersContainer lettersContainer;
-    private JPanel text;
+    private CreateLetter createLetter;
 
-    public KeyListenerForTextField(LettersContainer lettersContainer1, JPanel text){
-        this.lettersContainer = lettersContainer1;
-        this.text = text;
+    private int keyEnter = 10;
+    private int keyDelete = 127;
+    private int keyBackSpace = 8;
+
+    public KeyListenerForTextField(TextField textField, LettersContainer lettersContainer, CreateLetter createLetter) {
+        this.textField = textField;
+        this.lettersContainer = lettersContainer;
+        this.createLetter = createLetter;
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
+        if(!chekKeyPressed(e)){
+            lettersContainer.addNewLetter(createLetter.inputChar(e.getKeyChar()));
+            textField.repaint();
+        }
+
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        LetterView symbol = new LetterView();
-        symbol.letter = e.getKeyChar();
-        lettersContainer.addNewLetter(symbol);
-        text.repaint();
+//        if(e.VK_ENTER == e.getKeyCode()){
+//            textField.inputKeyEnter();
+//            textField.repaint();
+//        }
+//        else if(e.VK_DELETE == e.getKeyCode()){
+//            textField.inputKeyDelete();
+//            textField.repaint();
+//        }
+//        else if(e.VK_BACK_SPACE == e.getKeyCode()){
+//            textField.inputKeyBackSpace();
+//            textField.repaint();
+//        }
+
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+
     }
 
-
+    private boolean chekKeyPressed(KeyEvent e){
+       return ((int) e.getKeyChar() == keyEnter ||
+               (int) e.getKeyChar() == keyBackSpace ||
+               (int) e.getKeyChar() == keyDelete);
+    }
 }

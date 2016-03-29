@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/texteditor.iml" filepath="$PROJECT_DIR$/texteditor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/by.verenich.texteditor.iml" filepath="$PROJECT_DIR$/by.verenich.texteditor.iml" />
     </modules>
   </component>
 </project>

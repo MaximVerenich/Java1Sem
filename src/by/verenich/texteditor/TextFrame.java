@@ -1,10 +1,5 @@
 package by.verenich.texteditor;
 
-import by.verenich.texteditor.controller.KeyListenerForTextField;
-import by.verenich.texteditor.controller.MouseFocusForTextField;
-import by.verenich.texteditor.storage.LettersContainer;
-import com.sun.deploy.association.Action;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -12,36 +7,27 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Shape;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class TextFrame {
-    public JFrame textFrame;
+    private JFrame textFrame;
     private JMenuBar menu;
     private JToolBar instruments;
+    private LettersContainer lettersContainer = new LettersContainer();
+    private CreateLetter createLetter = new CreateLetter();
+    private TextField textField = new TextField(lettersContainer, createLetter);
 
     public TextFrame() {
         createMainJFrame();
         createMenu();
         createToolBar();
-        TextField textField = new TextField();
         textFrame.add(textField);
         textFrame.setVisible(true);
     }
@@ -141,7 +127,7 @@ public class TextFrame {
         addTextSizeToToolBar();
         addTextBoldfaceToToolBar();
         addTextCursiveToToolBar();
-        addTextUnderlineToToolBar();
+        //addTextUnderlineToToolBar();
         addTextCopyToToolBar();
         addTextInsertToToolBar();
         addTextSaveToToolBar();
@@ -158,26 +144,48 @@ public class TextFrame {
                 "Times New Roman"
         };
         JComboBox textType = new JComboBox(types);
+        textType.setBackground(Color.white);
         Dimension textTypeDimension = new Dimension(120, 40);
         textType.setMaximumSize(textTypeDimension);
+
+        textType.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                try {
+                    createLetter.type = e.getItem().toString();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         instruments.add(textType);
     }
 
     private void addTextSizeToToolBar() {
         String[] sizes = {
-                "8",
-                "9",
-                "10",
-                "11",
                 "12",
                 "14",
-                "16"
+                "16",
+                "18",
+                "20",
+                "24"
         };
         JComboBox textSize = new JComboBox(sizes);
+        textSize.setBackground(Color.white);
         textSize.setSize(40, 40);
         Dimension textSizeDimension = new Dimension(60, 40);
         textSize.setMaximumSize(textSizeDimension);
+        textSize.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                try {
+                    createLetter.size = Integer.parseInt("" + e.getItem());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
         instruments.add(textSize);
     }
 
@@ -186,6 +194,24 @@ public class TextFrame {
         textBoldface.setSize(20, 20);
 
         textBoldface.setToolTipText("Жирный");
+
+        textBoldface.setBackground(Color.white);
+
+        textBoldface.addActionListener(new ActionListener() {
+            int checked = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (checked == 0) {
+                    createLetter.checkedBoldface(true);
+                    checked = 1;
+                    textBoldface.setBackground(Color.decode("#b6e1fc"));
+                } else {
+                    createLetter.checkedBoldface(false);
+                    checked = 0;
+                    textBoldface.setBackground(Color.WHITE);
+                }
+            }
+        });
 
         instruments.add(textBoldface);
     }
@@ -196,6 +222,24 @@ public class TextFrame {
 
         textCursive.setToolTipText("Курсив");
 
+        textCursive.setBackground(Color.white);
+
+        textCursive.addActionListener(new ActionListener() {
+            int checked = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (checked == 0) {
+                    createLetter.checkedCursive(true);
+                    checked = 1;
+                    textCursive.setBackground(Color.decode("#b6e1fc"));
+                } else {
+                    createLetter.checkedCursive(false);
+                    checked = 0;
+                    textCursive.setBackground(Color.WHITE);
+                }
+            }
+        });
+
         instruments.add(textCursive);
     }
 
@@ -204,6 +248,8 @@ public class TextFrame {
         textUnderline.setSize(20, 20);
 
         textUnderline.setToolTipText("Подчеркнутый");
+
+        textUnderline.setBackground(Color.white);
 
         instruments.add(textUnderline);
     }
@@ -214,6 +260,7 @@ public class TextFrame {
 
         textCopy.setToolTipText("Копировать");
 
+        textCopy.setBackground(Color.white);
 
         instruments.add(textCopy);
     }
@@ -224,6 +271,8 @@ public class TextFrame {
 
         textInsert.setToolTipText("Вставить");
 
+        textInsert.setBackground(Color.white);
+
         instruments.add(textInsert);
     }
 
@@ -232,6 +281,8 @@ public class TextFrame {
         textSave.setSize(20, 20);
 
         textSave.setToolTipText("Сохранить");
+
+        textSave.setBackground(Color.white);
 
         instruments.add(textSave);
     }
@@ -242,16 +293,11 @@ public class TextFrame {
 
         textOpen.setToolTipText("Открыть");
 
+        textOpen.setBackground(Color.white);
+
         instruments.add(textOpen);
     }
 
-
-
-//      paintComponent()
-//      переопределение и перегрузка
-//      коллекции (ИНТЕРФЕЙСЫ List, Set)
-//      анонимные классы
-//      alt+insert
 }
 
 

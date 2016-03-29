@@ -8,7 +8,6 @@ public class MouseFocusForTextField extends MouseAdapter {
     private JPanel text;
 
     public MouseFocusForTextField(JPanel text) {
-
         this.text = text;
     }
 
