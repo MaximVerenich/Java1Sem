@@ -9,7 +9,8 @@ public class Letter {
     public int cursive;
     public int size;
     public String type;
-    private boolean underline;
+    public int coordinatX;
+    public int coordinatY;
 
     @Override
     public String toString() {

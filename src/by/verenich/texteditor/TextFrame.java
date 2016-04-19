@@ -3,11 +3,15 @@ package by.verenich.texteditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -22,14 +26,19 @@ public class TextFrame {
     private JToolBar instruments;
     private LettersContainer lettersContainer = new LettersContainer();
     private CreateLetter createLetter = new CreateLetter();
-    private TextField textField = new TextField(lettersContainer, createLetter);
+    private Caret caret = new Caret();
+    private JScrollPane scrollPane;
+    private TextField textField = new TextField(lettersContainer, createLetter, caret);
 
     public TextFrame() {
         createMainJFrame();
         createMenu();
         createToolBar();
-        textFrame.add(textField);
+        scrollPane = new JScrollPane(textField);
+        textField.scrollPane = scrollPane;
+        textFrame.add(scrollPane, BorderLayout.CENTER);
         textFrame.setVisible(true);
+        textField.requestFocus();
     }
 
     private void createMainJFrame() {
@@ -37,6 +46,7 @@ public class TextFrame {
         textFrame.setSize(700, 500);
         textFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         textFrame.setLocationRelativeTo(null);
+        textField.textFrame = textFrame;
     }
 
     private void createMenu() {
@@ -156,6 +166,7 @@ public class TextFrame {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+                textField.requestFocus();
             }
         });
 
@@ -184,6 +195,7 @@ public class TextFrame {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+                textField.requestFocusInWindow();
             }
         });
         instruments.add(textSize);
@@ -199,6 +211,7 @@ public class TextFrame {
 
         textBoldface.addActionListener(new ActionListener() {
             int checked = 0;
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (checked == 0) {
@@ -210,6 +223,7 @@ public class TextFrame {
                     checked = 0;
                     textBoldface.setBackground(Color.WHITE);
                 }
+                textField.requestFocusInWindow();
             }
         });
 
@@ -226,6 +240,7 @@ public class TextFrame {
 
         textCursive.addActionListener(new ActionListener() {
             int checked = 0;
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (checked == 0) {
@@ -237,21 +252,11 @@ public class TextFrame {
                     checked = 0;
                     textCursive.setBackground(Color.WHITE);
                 }
+                textField.requestFocusInWindow();
             }
         });
 
         instruments.add(textCursive);
-    }
-
-    private void addTextUnderlineToToolBar() {
-        JButton textUnderline = new JButton(new ImageIcon("resources/images/Underline.png"));
-        textUnderline.setSize(20, 20);
-
-        textUnderline.setToolTipText("Подчеркнутый");
-
-        textUnderline.setBackground(Color.white);
-
-        instruments.add(textUnderline);
     }
 
     private void addTextCopyToToolBar() {
@@ -284,6 +289,13 @@ public class TextFrame {
 
         textSave.setBackground(Color.white);
 
+        textSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveFile();
+            }
+        });
+
         instruments.add(textSave);
     }
 
@@ -295,10 +307,58 @@ public class TextFrame {
 
         textOpen.setBackground(Color.white);
 
+        textOpen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openFile();
+            }
+        });
+
         instruments.add(textOpen);
     }
 
+    private void openFile() {
+        JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(new FileNameExtensionFilter("Text files", "txt", "mytype"));
+        if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if ((getExtension(fc.getSelectedFile().getName()).equals("txt"))) {
+                openTextFile(fc.getSelectedFile().getPath());
+            }
+        }
+    }
+
+    private String getExtension(String fileName) {
+        String extension = null;
+        int i = fileName.lastIndexOf('.');
+        if (i > 0 &&  i < fileName.length() - 1) {
+            extension = fileName.substring(i+1).toLowerCase();
+        }
+        return extension;
+    }
+
+    private void openTextFile(String fileName){
+    }
+
+    private void saveFile(){
+
+    }
+
+    public TextField getTextField() {
+        return textField;
+    }
+
+    public JFrame getTextFrame() {
+        return textFrame;
+    }
+
+    public JScrollPane getScrollPane() {
+        return scrollPane;
+    }
+
 }
+
+
+
 
 
 

@@ -54,6 +54,10 @@ public class KeyListenerForTextField implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
 
+        if (e.VK_ENTER == e.getKeyCode()){
+            lettersContainer.addNewLetter(createLetter.inputChar(e.getKeyChar()));
+            textField.repaint();
+        }
     }
 
     private boolean chekKeyPressed(KeyEvent e){
