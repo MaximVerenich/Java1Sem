@@ -1,11 +1,11 @@
 package by.verenich.texteditor;
 
 public class CreateLetter {
-    public Letter letter;
-    public boolean boldface;
-    public boolean cursive;
-    public int size;
-    public String type;
+    private Letter letter;
+    private boolean boldface;
+    private boolean cursive;
+    private int size;
+    private String type;
 
     public CreateLetter(){
         size = 12;
@@ -27,23 +27,47 @@ public class CreateLetter {
 
     public Letter inputChar(char symbol){
         letter = new Letter();
-        letter.symbol = symbol;
+        letter.setSymbol(symbol);
 
         if(boldface == true){
-            letter.boldface = 1;
+            letter.setBoldface(1);
         }
-        else letter.boldface = 0;
+        else letter.setBoldface(0);
 
         if(cursive == true){
-            letter.cursive = 1;
+            letter.setCursive(1);
         }
-        else letter.cursive = 0;
+        else letter.setCursive(0);
 
-        letter.size = size;
+        letter.setSize(size);
 
-        letter.type = type;
+        letter.setType(type);
 
         return letter;
+    }
+
+    public boolean isBoldface() {
+        return boldface;
+    }
+
+    public boolean isCursive() {
+        return cursive;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

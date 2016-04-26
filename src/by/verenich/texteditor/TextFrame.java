@@ -10,7 +10,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -29,13 +28,15 @@ public class TextFrame {
     private Caret caret = new Caret();
     private JScrollPane scrollPane;
     private TextField textField = new TextField(lettersContainer, createLetter, caret);
+    private JButton textBoldface;
+    private JButton textCursive;
 
     public TextFrame() {
         createMainJFrame();
         createMenu();
         createToolBar();
         scrollPane = new JScrollPane(textField);
-        textField.scrollPane = scrollPane;
+        textField.setScrollPane(scrollPane);
         textFrame.add(scrollPane, BorderLayout.CENTER);
         textFrame.setVisible(true);
         textField.requestFocus();
@@ -46,7 +47,7 @@ public class TextFrame {
         textFrame.setSize(700, 500);
         textFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         textFrame.setLocationRelativeTo(null);
-        textField.textFrame = textFrame;
+        textField.setTextFrame(textFrame);
     }
 
     private void createMenu() {
@@ -76,9 +77,33 @@ public class TextFrame {
         JMenu typeMenu = new JMenu("Шрифт");
 
         JMenuItem calibriMenu = new JMenuItem("Calibri");
+        calibriMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createLetter.setType("Calibri");
+            }
+        });
         JMenuItem cambriaMenu = new JMenuItem("Cambria");
+        cambriaMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createLetter.setType("Cambria");
+            }
+        });
         JMenuItem georgiaMenu = new JMenuItem("Georgia");
+        georgiaMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createLetter.setType("Georgia");
+            }
+        });
         JMenuItem timesNewRomanMenu = new JMenuItem("Times New Roman");
+        timesNewRomanMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createLetter.setType("Times New Roman");
+            }
+        });
 
         typeMenu.add(calibriMenu);
         typeMenu.add(cambriaMenu);
@@ -89,31 +114,96 @@ public class TextFrame {
 
         JMenu sizeMenu = new JMenu("Размер");
 
-        JMenuItem size8Menu = new JMenuItem("8");
-        JMenuItem size9Menu = new JMenuItem("9");
-        JMenuItem size10Menu = new JMenuItem("10");
-        JMenuItem size11Menu = new JMenuItem("11");
         JMenuItem size12Menu = new JMenuItem("12");
+        size12Menu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createLetter.setSize(12);
+            }
+        });
         JMenuItem size14Menu = new JMenuItem("14");
+        size14Menu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createLetter.setSize(14);
+            }
+        });
         JMenuItem size16Menu = new JMenuItem("16");
+        size16Menu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createLetter.setSize(16);
+            }
+        });
+        JMenuItem size18Menu = new JMenuItem("18");
+        size18Menu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createLetter.setSize(18);
+            }
+        });
+        JMenuItem size20Menu = new JMenuItem("20");
+        size20Menu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createLetter.setSize(20);
+            }
+        });
+        JMenuItem size24Menu = new JMenuItem("24");
+        size24Menu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createLetter.setSize(24);
+            }
+        });
 
-        sizeMenu.add(size8Menu);
-        sizeMenu.add(size9Menu);
-        sizeMenu.add(size10Menu);
-        sizeMenu.add(size11Menu);
         sizeMenu.add(size12Menu);
         sizeMenu.add(size14Menu);
         sizeMenu.add(size16Menu);
+        sizeMenu.add(size18Menu);
+        sizeMenu.add(size20Menu);
+        sizeMenu.add(size24Menu);
 
         instrumentMenu.add(sizeMenu);
 
         JMenuItem boldfaceMenu = new JMenuItem("Жирный");
+        boldfaceMenu.addActionListener(new ActionListener() {
+            int checked = 0;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (checked == 0) {
+                    createLetter.checkedBoldface(true);
+                    checked = 1;
+                    textBoldface.setBackground(Color.decode("#b6e1fc"));
+                } else {
+                    createLetter.checkedBoldface(false);
+                    checked = 0;
+                    textBoldface.setBackground(Color.WHITE);
+                }
+                textField.requestFocusInWindow();
+            }
+        });
         JMenuItem cursiveMenu = new JMenuItem("Курсив");
-        JMenuItem underlineMenu = new JMenuItem("Подчеркнутый");
+        cursiveMenu.addActionListener(new ActionListener() {
+            int checked = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (checked == 0) {
+                    createLetter.checkedCursive(true);
+                    checked = 1;
+                    textCursive.setBackground(Color.decode("#b6e1fc"));
+                } else {
+                    createLetter.checkedCursive(false);
+                    checked = 0;
+                    textCursive.setBackground(Color.WHITE);
+                }
+                textField.requestFocusInWindow();
+            }
+        });
 
         instrumentMenu.add(boldfaceMenu);
         instrumentMenu.add(cursiveMenu);
-        instrumentMenu.add(underlineMenu);
 
         menu.add(instrumentMenu);
     }
@@ -121,7 +211,19 @@ public class TextFrame {
     private void createCorrection() {
         JMenu correction = new JMenu("Правка");
         JMenuItem copyMenu = new JMenuItem("Копировать");
+        copyMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textField.getAllocation().copyText();
+            }
+        });
         JMenuItem insertMenu = new JMenuItem("Вставить");
+        insertMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textField.getAllocation().pasteText();
+            }
+        });
         correction.add(copyMenu);
         correction.add(insertMenu);
 
@@ -162,7 +264,7 @@ public class TextFrame {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 try {
-                    createLetter.type = e.getItem().toString();
+                    createLetter.setType(e.getItem().toString());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -191,7 +293,7 @@ public class TextFrame {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 try {
-                    createLetter.size = Integer.parseInt("" + e.getItem());
+                    createLetter.setSize(Integer.parseInt("" + e.getItem()));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -202,7 +304,7 @@ public class TextFrame {
     }
 
     private void addTextBoldfaceToToolBar() {
-        JButton textBoldface = new JButton(new ImageIcon("resources/images/Boldface.png"));
+        textBoldface = new JButton(new ImageIcon("resources/images/Boldface.png"));
         textBoldface.setSize(20, 20);
 
         textBoldface.setToolTipText("Жирный");
@@ -231,7 +333,7 @@ public class TextFrame {
     }
 
     private void addTextCursiveToToolBar() {
-        JButton textCursive = new JButton(new ImageIcon("resources/images/Cursive.png"));
+        textCursive = new JButton(new ImageIcon("resources/images/Cursive.png"));
         textCursive.setSize(20, 20);
 
         textCursive.setToolTipText("Курсив");
@@ -268,6 +370,13 @@ public class TextFrame {
         textCopy.setBackground(Color.white);
 
         instruments.add(textCopy);
+
+        textCopy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textField.getAllocation().copyText();
+            }
+        });
     }
 
     private void addTextInsertToToolBar() {
@@ -279,6 +388,13 @@ public class TextFrame {
         textInsert.setBackground(Color.white);
 
         instruments.add(textInsert);
+
+        textInsert.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textField.getAllocation().pasteText();
+            }
+        });
     }
 
     private void addTextSaveToToolBar() {
@@ -330,29 +446,17 @@ public class TextFrame {
     private String getExtension(String fileName) {
         String extension = null;
         int i = fileName.lastIndexOf('.');
-        if (i > 0 &&  i < fileName.length() - 1) {
-            extension = fileName.substring(i+1).toLowerCase();
+        if (i > 0 && i < fileName.length() - 1) {
+            extension = fileName.substring(i + 1).toLowerCase();
         }
         return extension;
     }
 
-    private void openTextFile(String fileName){
+    private void openTextFile(String fileName) {
     }
 
-    private void saveFile(){
+    private void saveFile() {
 
-    }
-
-    public TextField getTextField() {
-        return textField;
-    }
-
-    public JFrame getTextFrame() {
-        return textFrame;
-    }
-
-    public JScrollPane getScrollPane() {
-        return scrollPane;
     }
 
 }

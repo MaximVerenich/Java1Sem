@@ -38,7 +38,11 @@ public class AllocationWithMouse implements MouseMotionListener, MouseListener{
     public void mouseReleased(MouseEvent e) {
         int secondClickX = e.getX();
         int secondClickY = e.getY();
-        allocation.allocation(firstClickX, firstClickY, secondClickX, secondClickY);
+        allocation.setFirstClickX(firstClickX);
+        allocation.setFirstClickY(firstClickY);
+        allocation.setSecondClickX(secondClickX);
+        allocation.setSecondClickY(secondClickY);
+        System.out.print(firstClickX+" "+firstClickY+" "+secondClickX+" "+secondClickY);
 
     }
 

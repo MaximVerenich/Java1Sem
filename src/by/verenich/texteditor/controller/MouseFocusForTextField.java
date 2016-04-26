@@ -22,9 +22,6 @@ public class MouseFocusForTextField implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         caret.setCoordinatX(e.getX());
         caret.setCoordinatY(e.getY());
-        System.out.println(e.getX());
-        System.out.println(e.getY());
-        System.out.println("Hello!");
     }
 
     @Override
