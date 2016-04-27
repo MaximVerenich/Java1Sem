@@ -1,5 +1,8 @@
 package by.verenich.texteditor;
 
+import by.verenich.texteditor.xml.FileReader;
+import by.verenich.texteditor.xml.FileWriter;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -10,7 +13,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
 
 public class TextFrame {
     private JFrame textFrame;
@@ -187,6 +190,7 @@ public class TextFrame {
         JMenuItem cursiveMenu = new JMenuItem("Курсив");
         cursiveMenu.addActionListener(new ActionListener() {
             int checked = 0;
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (checked == 0) {
@@ -325,7 +329,7 @@ public class TextFrame {
                     checked = 0;
                     textBoldface.setBackground(Color.WHITE);
                 }
-                textField.requestFocusInWindow();
+                textField.requestFocus();
             }
         });
 
@@ -433,30 +437,27 @@ public class TextFrame {
         instruments.add(textOpen);
     }
 
+    private void saveFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File("C:\\Users\\1o\\Desktop"));
+        int result = fileChooser.showDialog(null, "xml");
+        if (result == JFileChooser.APPROVE_OPTION) {
+            new FileWriter(fileChooser.getSelectedFile().getPath(), lettersContainer);
+        }
+    }
+
     private void openFile() {
-        JFileChooser fc = new JFileChooser();
-        fc.setFileFilter(new FileNameExtensionFilter("Text files", "txt", "mytype"));
-        if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            if ((getExtension(fc.getSelectedFile().getName()).equals("txt"))) {
-                openTextFile(fc.getSelectedFile().getPath());
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File("C:\\Users\\1o\\Desktop"));
+        int result = fileChooser.showDialog(null, "open");
+        if (result == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.getSelectedFile().getName().contains(".xml")) {
+                new FileReader(fileChooser.getSelectedFile().getPath(), lettersContainer);
             }
         }
-    }
-
-    private String getExtension(String fileName) {
-        String extension = null;
-        int i = fileName.lastIndexOf('.');
-        if (i > 0 && i < fileName.length() - 1) {
-            extension = fileName.substring(i + 1).toLowerCase();
-        }
-        return extension;
-    }
-
-    private void openTextFile(String fileName) {
-    }
-
-    private void saveFile() {
-
+        textField.repaint();
+        textField.requestFocus();
+        caret.setPosition(lettersContainer.getLetters().size()-1);
     }
 
 }

@@ -36,15 +36,15 @@ public class TextField extends JPanel {
         caret.setTextField(this);
         CaretTimer caretTimer = new CaretTimer(this);
 
-        allocation = new Allocation(this, lettersContainer, createLetter);
+        allocation = new Allocation(this, lettersContainer, createLetter, caret);
 
-        MouseFocusForTextField mouseFocusForTextField = new MouseFocusForTextField(this, caret);
+        MouseFocusForTextField mouseFocusForTextField = new MouseFocusForTextField(this, caret, lettersContainer, line);
 
         this.addMouseListener(mouseFocusForTextField);
 
         this.addKeyListener(new KeyListenerForTextField(this, lettersContainer, createLetter, line, caret));
 
-        this.addMouseListener(new AllocationWithMouse(allocation));
+        this.addMouseListener(new AllocationWithMouse(allocation, lettersContainer, this));
 
         this.addMouseMotionListener(new CursorControl(this));
 
@@ -63,51 +63,61 @@ public class TextField extends JPanel {
         super.paintComponent(g);
         g.clearRect(0, 0, this.getWidth(), this.getHeight());
         Graphics2D g2D = (Graphics2D) g;
-        caret.setCoordinatX(10);
-        caret.setCoordinatY(g2D.getFont().getSize() + 10);
+        int x = 10;
+        int y = g2D.getFont().getSize() + 10;
 
-        for (Letter letter : lettersContainer.letters) {
-            if (letter.getBoldface() == 1 && letter.getCursive() == 0) {
-                g2D.setFont(new Font(letter.getType(), Font.BOLD, letter.getSize()));
-            } else if (letter.getBoldface() == 0 && letter.getCursive() == 1) {
-                g2D.setFont(new Font(letter.getType(), Font.ITALIC, letter.getSize()));
-            } else if (letter.getBoldface() == 1 && letter.getCursive() == 1) {
-                g2D.setFont(new Font(letter.getType(), Font.BOLD + Font.ITALIC, letter.getSize()));
-            } else if (letter.getBoldface() == 0 && letter.getCursive() == 0) {
-                g2D.setFont(new Font(letter.getType(), Font.PLAIN, letter.getSize()));
+        for (int i = 0; i < lettersContainer.getLetters().size(); i++) {
+            if (lettersContainer.getLetters().get(i).isBoldface() == true && lettersContainer.getLetters().get(i).isCursive() == false) {
+                g2D.setColor(lettersContainer.getLetters().get(i).getColor());
+                g2D.setFont(new Font(lettersContainer.getLetters().get(i).getType(), Font.BOLD, lettersContainer.getLetters().get(i).getSize()));
+            } else if (lettersContainer.getLetters().get(i).isBoldface() == false && lettersContainer.getLetters().get(i).isCursive() == true) {
+                g2D.setColor(lettersContainer.getLetters().get(i).getColor());
+                g2D.setFont(new Font(lettersContainer.getLetters().get(i).getType(), Font.ITALIC, lettersContainer.getLetters().get(i).getSize()));
+            } else if (lettersContainer.getLetters().get(i).isBoldface() == true && lettersContainer.getLetters().get(i).isCursive() == true) {
+                g2D.setColor(lettersContainer.getLetters().get(i).getColor());
+                g2D.setFont(new Font(lettersContainer.getLetters().get(i).getType(), Font.BOLD + Font.ITALIC, lettersContainer.getLetters().get(i).getSize()));
+            } else if (lettersContainer.getLetters().get(i).isBoldface() == false && lettersContainer.getLetters().get(i).isCursive() == false) {
+                g2D.setColor(lettersContainer.getLetters().get(i).getColor());
+                g2D.setFont(new Font(lettersContainer.getLetters().get(i).getType(), Font.PLAIN, lettersContainer.getLetters().get(i).getSize()));
             }
 
-            letter.setNumberOfLine(line.getNumberLine());
-            letter.setCoordinatX(caret.getCoordinatX());
-            letter.setCoordinatY(caret.getCoordinatY());
+            lettersContainer.getLetters().get(i).setNumberOfLine(line.getNumberLine());
+            lettersContainer.getLetters().get(i).setCoordinatX(x);
+            lettersContainer.getLetters().get(i).setCoordinatY(y);
 
-            if (letter.getSize() > line.getMaxSize()) {
-                line.setMaxSize(letter.getSize());
-                caret.setCoordinatY(caret.getCoordinatY() + line.getMaxSize() - 15);
-                letter.setCoordinatY(caret.getCoordinatY());
+            if (lettersContainer.getLetters().get(i).getSize() > line.getMaxSize()) {
+                line.setMaxSize(lettersContainer.getLetters().get(i).getSize());
+                y += line.getMaxSize() - 15;
+                lettersContainer.getLetters().get(i).setCoordinatY(y);
             }
 
-            g2D.drawString(letter.toString(), letter.getCoordinatX(), letter.getCoordinatY());
-            caret.setSize(letter.getSize());
-            caret.setCoordinatX(caret.getCoordinatX() + g2D.getFontMetrics().stringWidth(letter.toString()) + 2);
+            g2D.drawString(lettersContainer.getLetters().get(i).toString(), lettersContainer.getLetters().get(i).getCoordinatX(), lettersContainer.getLetters().get(i).getCoordinatY());
+            if(i == caret.getPosition()){
+                caret.setCoordinatX(lettersContainer.getLetters().get(i).getCoordinatX()+g2D.getFontMetrics().stringWidth(lettersContainer.getLetters().get(i).toString())+3);
+                caret.setCoordinatY(lettersContainer.getLetters().get(i).getCoordinatY());
+                caret.setSize(lettersContainer.getLetters().get(i).getSize());
+            }
+            x += g2D.getFontMetrics().stringWidth(lettersContainer.getLetters().get(i).toString())+3;
 
-            if (caret.getCoordinatX() >= this.getPreferredSize().getWidth()) {
+            if (x >= this.getPreferredSize().getWidth()) {
                 int getPreferedSizeGetWidth = (int) this.getPreferredSize().getWidth();
-                this.setPreferredSize(new Dimension(getPreferedSizeGetWidth + g2D.getFontMetrics().stringWidth(letter.toString()) + 2, this.getHeight()));
-                this.setSize(new Dimension(getPreferedSizeGetWidth + g2D.getFontMetrics().stringWidth(letter.toString()) + 2, this.getHeight()));
+                this.setPreferredSize(new Dimension(getPreferedSizeGetWidth + g2D.getFontMetrics().stringWidth(lettersContainer.getLetters().get(i).toString()) + 2, this.getHeight()));
+                this.setSize(new Dimension(getPreferedSizeGetWidth + g2D.getFontMetrics().stringWidth(lettersContainer.getLetters().get(i).toString()) + 2, this.getHeight()));
                 scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             }
 
-            if (caret.getCoordinatY() >= this.getPreferredSize().getHeight()) {
+            if (y >= this.getPreferredSize().getHeight()) {
                 int getPreferedSizeGetHeight = (int) this.getPreferredSize().getHeight();
                 this.setPreferredSize(new Dimension(this.getWidth(), getPreferedSizeGetHeight + g2D.getFont().getSize() + 3));
                 this.setSize(new Dimension(this.getWidth(), getPreferedSizeGetHeight + g2D.getFont().getSize() + 3));
                 scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
             }
 
-            if (letter.getSymbol() == 10) {
-                caret.setCoordinatY(caret.getCoordinatY() + 12);
-                caret.setCoordinatX(10);
+            if (lettersContainer.getLetters().get(i).getSymbol() == 10) {
+                y += 12;
+                x = 10;
+                caret.setCoordinatX(x);
+                caret.setCoordinatY(y);
                 line.setMaxSize(12);
                 line.setNumberLine(line.getNumberLine() + 1);
                 line.lines = line.getNumberLine();

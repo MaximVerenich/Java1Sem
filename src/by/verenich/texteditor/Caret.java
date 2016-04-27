@@ -7,7 +7,7 @@ public class Caret {
     private int coordinatX;
     private int coordinatY;
     private int size;
-    private int position;
+    private int position = -1;
     private TextField textField;
 
     public Caret() {

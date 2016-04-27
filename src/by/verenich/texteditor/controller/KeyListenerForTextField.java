@@ -2,15 +2,10 @@ package by.verenich.texteditor.controller;
 
 import by.verenich.texteditor.Caret;
 import by.verenich.texteditor.CreateLetter;
-import by.verenich.texteditor.Letter;
 import by.verenich.texteditor.LettersContainer;
 import by.verenich.texteditor.Line;
 import by.verenich.texteditor.TextField;
 
-import javax.swing.JPanel;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -36,47 +31,67 @@ public class KeyListenerForTextField implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if(!chekKeyPressed(e)){
-            lettersContainer.addNewLetter(createLetter.inputChar(e.getKeyChar()));
-            textField.repaint();
+        if (!chekKeyPressed(e)) {
+            if (caret.getPosition() != lettersContainer.getLetters().size() - 1) {
+                lettersContainer.getLetters().add(caret.getPosition() + 1, createLetter.inputChar(e.getKeyChar()));
+            } else {
+                lettersContainer.addNewLetter(createLetter.inputChar(e.getKeyChar()));
+            }
+            caret.setPosition(caret.getPosition() + 1);
         }
+        textField.repaint();
 
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == e.VK_LEFT){
-            for(int i=0; i< lettersContainer.letters.size(); i++){
-                if(lettersContainer.letters.get(i).isChekCaret() == true){
-                    caret.setCoordinatX(lettersContainer.letters.get(i-1).getCoordinatX());
-                    lettersContainer.letters.get(i).setChekCaret(false);
-                    lettersContainer.letters.get(i-1).setChekCaret(true);
+        if (e.getKeyCode() == e.VK_LEFT) {
+            for (int i = 0; i < lettersContainer.getLetters().size(); i++) {
+                if (caret.getPosition() == i) {
+                    caret.setPosition(caret.getPosition() - 1);
+                    caret.setCoordinatX(lettersContainer.getLetters().get(i - 1).getCoordinatX());
                 }
             }
+            textField.repaint();
         }
-        if(e.getKeyCode() == e.VK_RIGHT){
-            for(int i=0; i< lettersContainer.letters.size(); i++){
-                if(lettersContainer.letters.get(i).isChekCaret() == true){
-                    caret.setCoordinatX(lettersContainer.letters.get(i+1).getCoordinatX());
-                    lettersContainer.letters.get(i).setChekCaret(false);
-                    lettersContainer.letters.get(i+1).setChekCaret(true);
+        if (e.getKeyCode() == e.VK_RIGHT) {
+            for (int i = 0; i < lettersContainer.getLetters().size(); i++) {
+                if (caret.getPosition() == i) {
+                    caret.setPosition(caret.getPosition() + 1);
+                    caret.setCoordinatX(lettersContainer.getLetters().get(i + 1).getCoordinatX());
+                    break;
                 }
             }
+            textField.repaint();
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
 
-        if (e.VK_ENTER == e.getKeyCode()){
+        if (e.VK_ENTER == e.getKeyCode()) {
             lettersContainer.addNewLetter(createLetter.inputChar(e.getKeyChar()));
             textField.repaint();
+            caret.setPosition(caret.getPosition() + 1);
+        }
+
+        if (e.VK_BACK_SPACE == e.getKeyCode()) {
+            lettersContainer.getLetters().remove(caret.getPosition());
+            caret.setPosition(caret.getPosition() - 1);
+            textField.repaint();
+        }
+
+        if (e.VK_DELETE == e.getKeyCode()) {
+            if (caret.getPosition() < lettersContainer.getLetters().size() - 1) {
+                lettersContainer.getLetters().remove(caret.getPosition() + 1);
+                textField.repaint();
+            }
         }
     }
 
-    private boolean chekKeyPressed(KeyEvent e){
-       return ((int) e.getKeyChar() == keyEnter ||
-               (int) e.getKeyChar() == keyBackSpace ||
-               (int) e.getKeyChar() == keyDelete);
+    private boolean chekKeyPressed(KeyEvent e) {
+        return ((int) e.getKeyChar() == keyEnter ||
+                (int) e.getKeyChar() == keyBackSpace ||
+                (int) e.getKeyChar() == keyDelete);
     }
 }

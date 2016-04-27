@@ -1,5 +1,7 @@
 package by.verenich.texteditor;
 
+import java.awt.Color;
+
 public class Allocation {
 
     private TextField textField;
@@ -9,30 +11,35 @@ public class Allocation {
     private int firstClickY;
     private int secondClickX;
     private int secondClickY;
-    private boolean copy;
     private LettersContainer dopLettersContainer;
-    public Allocation(TextField textField, LettersContainer lettersContainer, CreateLetter createLetter) {
+    private Caret caret;
+
+    public Allocation(TextField textField, LettersContainer lettersContainer, CreateLetter createLetter, Caret caret) {
         this.textField = textField;
         this.lettersContainer = lettersContainer;
         this.createLetter = createLetter;
+        this.caret = caret;
     }
 
     public void copyText() {
         LettersContainer dopLettersContainer = new LettersContainer();
         this.dopLettersContainer = dopLettersContainer;
-        for (int i = 0; i<lettersContainer.letters.size(); i++){
-            if(lettersContainer.letters.get(i).getCoordinatX() >= firstClickX && lettersContainer.letters.get(i).getCoordinatX() <= secondClickX){
-                if(lettersContainer.letters.get(i).getCoordinatY() >= firstClickY && lettersContainer.letters.get(i).getCoordinatY() <= secondClickY){
-                    dopLettersContainer.addNewLetter(lettersContainer.letters.get(i));
+        for (int i = 0; i<lettersContainer.getLetters().size(); i++){
+            if(lettersContainer.getLetters().get(i).getCoordinatX() >= firstClickX && lettersContainer.getLetters().get(i).getCoordinatX() <= secondClickX){
+                if(lettersContainer.getLetters().get(i).getCoordinatY() >= firstClickY && lettersContainer.getLetters().get(i).getCoordinatY() <= secondClickY){
+                    dopLettersContainer.addNewLetter(lettersContainer.getLetters().get(i));
+                    lettersContainer.getLetters().get(i).setColor(Color.BLACK);
                 }
             }
         }
+        textField.requestFocus();
     }
 
     public void pasteText() {
-        for(int i = 0; i<dopLettersContainer.letters.size(); i++){
-            lettersContainer.addNewLetter(dopLettersContainer.letters.get(i));
+        for(int i = 0; i<dopLettersContainer.getLetters().size(); i++){
+            lettersContainer.addNewLetter(dopLettersContainer.getLetters().get(i));
         }
+        caret.setPosition(caret.getPosition()+dopLettersContainer.getLetters().size());
         textField.repaint();
         textField.requestFocus();
     }

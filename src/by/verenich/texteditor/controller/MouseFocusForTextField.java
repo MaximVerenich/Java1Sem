@@ -1,8 +1,8 @@
 package by.verenich.texteditor.controller;
 
-import by.verenich.texteditor.Allocation;
 import by.verenich.texteditor.Caret;
-import by.verenich.texteditor.CreateLetter;
+import by.verenich.texteditor.LettersContainer;
+import by.verenich.texteditor.Line;
 
 import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
@@ -12,16 +12,18 @@ public class MouseFocusForTextField implements MouseListener {
 
     private JPanel text;
     private Caret caret;
+    private LettersContainer lettersContainer;
+    private Line line;
 
-    public MouseFocusForTextField(JPanel text, Caret caret) {
+    public MouseFocusForTextField(JPanel text, Caret caret, LettersContainer lettersContainer, Line line) {
         this.text = text;
         this.caret = caret;
+        this.lettersContainer = lettersContainer;
+        this.line = line;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        caret.setCoordinatX(e.getX());
-        caret.setCoordinatY(e.getY());
     }
 
     @Override

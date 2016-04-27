@@ -1,18 +1,19 @@
 package by.verenich.texteditor;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Letter {
     private char symbol;
-    private int boldface;
-    private int cursive;
+    private boolean boldface;
+    private boolean cursive;
     private int size;
     private String type;
     private int coordinatX;
     private int coordinatY;
     private int numberOfLine;
-    private boolean chekCaret;
+    private Color color;
 
     @Override
     public String toString() {
@@ -23,11 +24,11 @@ public class Letter {
         return symbol;
     }
 
-    public int getBoldface() {
+    public boolean isBoldface() {
         return boldface;
     }
 
-    public int getCursive() {
+    public boolean isCursive() {
         return cursive;
     }
 
@@ -47,23 +48,19 @@ public class Letter {
         return coordinatX;
     }
 
-    public int getNumberOfLine() {
-        return numberOfLine;
-    }
-
-    public boolean isChekCaret() {
-        return chekCaret;
+    public Color getColor() {
+        return color;
     }
 
     public void setSymbol(char symbol) {
         this.symbol = symbol;
     }
 
-    public void setBoldface(int boldface) {
+    public void setBoldface(boolean boldface) {
         this.boldface = boldface;
     }
 
-    public void setCursive(int cursive) {
+    public void setCursive(boolean cursive) {
         this.cursive = cursive;
     }
 
@@ -87,7 +84,7 @@ public class Letter {
         this.numberOfLine = numberOfLine;
     }
 
-    public void setChekCaret(boolean chekCaret) {
-        this.chekCaret = chekCaret;
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

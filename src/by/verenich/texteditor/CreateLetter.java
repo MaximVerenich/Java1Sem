@@ -1,5 +1,7 @@
 package by.verenich.texteditor;
 
+import java.awt.Color;
+
 public class CreateLetter {
     private Letter letter;
     private boolean boldface;
@@ -9,6 +11,7 @@ public class CreateLetter {
 
     public CreateLetter(){
         size = 12;
+        type = "Georgia";
     }
 
     public void checkedBoldface(boolean checked){
@@ -27,17 +30,18 @@ public class CreateLetter {
 
     public Letter inputChar(char symbol){
         letter = new Letter();
+        letter.setColor(Color.BLACK);
         letter.setSymbol(symbol);
 
         if(boldface == true){
-            letter.setBoldface(1);
+            letter.setBoldface(true);
         }
-        else letter.setBoldface(0);
+        else letter.setBoldface(false);
 
         if(cursive == true){
-            letter.setCursive(1);
+            letter.setCursive(true);
         }
-        else letter.setCursive(0);
+        else letter.setCursive(false);
 
         letter.setSize(size);
 
